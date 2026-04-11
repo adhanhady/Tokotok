@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Ini Home</h1>
-</body>
-</html>
+@extends('layouts.app')
+
+@section('content')
+<div class="text-center">
+    <h1>Selamat Datang di Toko Kami 🛍️</h1>
+    <p>Temukan parfum terbaik dengan harga terbaik</p>
+
+    <a href="/products" class="btn btn-primary">Lihat Produk</a>
+</div>
+@endsection
