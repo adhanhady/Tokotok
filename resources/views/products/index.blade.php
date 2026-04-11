@@ -6,7 +6,7 @@
 <div class="row">
 @foreach($products as $product)
     <div class="col-md-4 col-sm-6 mb-4">
-        <div class="card product-card h-100 shadow-sm border-0">
+        <div class="card h-100 shadow-sm border-0 product-card">
             <h6 class="text-muted">
                 {{ $product->category->name ?? '-' }}
             </h6>
