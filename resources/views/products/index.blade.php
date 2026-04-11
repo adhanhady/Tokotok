@@ -7,7 +7,9 @@
 @foreach($products as $product)
     <div class="col-md-4 col-sm-6 mb-4">
         <div class="card product-card h-100 shadow-sm border-0">
-
+            <h6 class="text-muted">
+                {{ $product->category->name ?? '-' }}
+            </h6>
             <!-- Gambar -->
             <img src="{{ asset('images/' . $product->image) }}" 
                  class="card-img-top product-img">
@@ -36,6 +38,9 @@
                         Tambah ke Keranjang
                     </button>
                 </form>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                {{ $products->links() }}
             </div>
         </div>
     </div>
