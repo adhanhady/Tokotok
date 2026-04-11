@@ -9,15 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->text('deskripsi');
-            $table->integer('harga');
-            $table->integer('stok');
-            $table->string('gambar');
+            $table->string('name');
+            $table->text('description');
+            $table->integer('price');
+            $table->integer('stock');
+            $table->string('image');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

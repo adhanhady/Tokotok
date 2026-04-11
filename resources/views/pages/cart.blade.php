@@ -8,8 +8,8 @@
 <div class="card shadow-sm">
     <div class="card-body">
 
-        <table class="table align-middle">
-            <thead class="table-dark">
+        <table class="table table-bordered align-middle">
+            <thead class="table-dark text-center">
                 <tr>
                     <th>Produk</th>
                     <th>Harga</th>
@@ -23,44 +23,59 @@
                 @php $total = 0; @endphp
 
                 @foreach(session('cart') as $id => $item)
+
                 @php 
-                    $subtotal = $item['harga'] * $item['qty']; 
-                    $total += $subtotal; 
+                    $price = $item['price'] ?? 0; // 🔥 anti error
+                    $qty = $item['qty'] ?? 1;
+                    $subtotal = $price * $qty;
+                    $total += $subtotal;
                 @endphp
 
                 <tr>
+                    <!-- PRODUK + GAMBAR -->
                     <td>
-                        <strong>{{ $item['nama'] }}</strong>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('images/' . ($item['image'] ?? 'default.jpg')) }}" 
+                                width="50" height="50"
+                                style="object-fit: cover;"
+                                class="me-2 rounded">
+
+                            <strong>{{ $item['name'] ?? '-' }}</strong>
+                        </div>
                     </td>
 
-                    <td>Rp {{ number_format($item['harga']) }}</td>
+                    <!-- HARGA -->
+                    <td class="text-center">Rp {{ number_format($price) }}</td>
 
-                    <td>
-                    <div class="d-flex align-items-center">
+                    <!-- QTY -->
+                    <td class="text-center">
+                        <div class="d-flex align-items-center justify-content-center gap-2">
 
-                        <!-- MINUS -->
-                        <form action="{{ route('cart.decrease', $id) }}" method="POST">
-                            @csrf
-                            <button class="btn btn-outline-secondary btn-sm">-</button>
-                        </form>
+                            <!-- MINUS -->
+                            <form action="{{ route('cart.decrease', $id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="width: 35px;">-</button>
+                            </form>
 
-                        <!-- QTY -->
-                        <span class="mx-2">{{ $item['qty'] }}</span>
+                            <span class="mx-2">{{ $qty }}</span>
 
-                        <!-- PLUS -->
-                        <form action="{{ route('cart.increase', $id) }}" method="POST">
-                            @csrf
-                            <button class="btn btn-outline-secondary btn-sm">+</button>
-                        </form>
+                            <!-- PLUS -->
+                            <form action="{{ route('cart.increase', $id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="width: 35px;">+</button>
+                            </form>
 
-                    </div>
-                </td>
-                    <td>Rp {{ number_format($subtotal) }}</td>
+                        </div>
+                    </td>
 
+                    <!-- TOTAL -->
+                   <td class="text-center">Rp {{ number_format($subtotal) }}</td>
+
+                    <!-- AKSI -->
                     <td>
                         <form action="{{ route('cart.remove', $id) }}" method="POST">
                             @csrf
-                            <button class="btn btn-danger btn-sm">
+                            <button type="submit" class="btn btn-danger btn-sm">
                                 Hapus
                             </button>
                         </form>
@@ -93,4 +108,4 @@
 </div>
 @endif
 
-@endsection
+@endsection 

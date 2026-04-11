@@ -9,24 +9,24 @@
         <div class="card product-card h-100 shadow-sm border-0">
 
             <!-- Gambar -->
-            <img src="{{ asset('images/' . $product->gambar) }}" 
+            <img src="{{ asset('images/' . $product->image) }}" 
                  class="card-img-top product-img">
 
             <div class="card-body d-flex flex-column">
                 
                 <!-- Nama -->
                 <h5 class="card-title fw-semibold">
-                    {{ $product->nama }}
+                    {{ $product->name }}
                 </h5>
 
                 <!-- Deskripsi -->
                 <p class="card-text text-muted small mb-2">
-                    {{ $product->deskripsi }}
+                    {{ $product->description }}
                 </p>
 
                 <!-- Harga -->
                 <p class="fw-bold text-danger mt-auto fs-5">
-                    Rp {{ number_format($product->harga) }}
+                    Rp {{ number_format($product->price ?? 0) }}
                 </p>
 
                 <!-- Tombol -->
