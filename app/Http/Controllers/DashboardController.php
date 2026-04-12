@@ -9,10 +9,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalProduk = Product::count();
-        $totalKategori = ProductCategory::count();
-        $totalKlik = Product::sum('views');
+    $totalProduk = Product::count();
+    $totalKategori = ProductCategory::count();
+    $totalKlik = Product::sum('views');
 
-        return view('dashboard', compact('totalProduk', 'totalKategori', 'totalKlik'));
+    return view('dashboard', compact(
+        'totalProduk',
+        'totalKategori',
+        'totalKlik'
+    ));
     }
 }

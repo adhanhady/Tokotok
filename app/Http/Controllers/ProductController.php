@@ -53,12 +53,12 @@ class ProductController extends Controller
     // Detail produk
     public function show($id)
     {
-          $product = Product::findOrFail($id);
+        $product = Product::findOrFail($id);
 
-            // tambah klik
-            $product->increment('views');
+        //  TAMBAH KLIK
+        $product->increment('views');
 
-            return view('products.show', compact('product'));
+        return view('products.show', compact('product'));
     }
 
     // Form edit
