@@ -1,49 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<h2 class="mb-4">Daftar Produk</h2>
+<h2 class="mb-4">List Produk</h2>
 
-<div class="row">
-@foreach($products as $product)
-    <div class="col-md-4 col-sm-6 mb-4">
-        <div class="card h-100 shadow-sm border-0 product-card">
-            <h6 class="text-muted">
-                {{ $product->category->name ?? '-' }}
-            </h6>
-            <!-- Gambar -->
-            <img src="{{ asset('images/' . $product->image) }}" 
-                 class="card-img-top product-img">
+<a href="{{ route('products.create') }}" class="btn btn-primary mb-3">
+    + Tambah
+</a>
 
-            <div class="card-body d-flex flex-column">
-                
-                <!-- Nama -->
-                <h5 class="card-title fw-semibold">
-                    {{ $product->name }}
-                </h5>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Deskripsi</th>
+            <th>Stok</th>
+            <th>Harga</th>
+            <th>Gambar</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
 
-                <!-- Deskripsi -->
-                <p class="card-text text-muted small mb-2">
-                    {{ $product->description }}
-                </p>
+    @foreach($products as $p)
+        <tr>
+            <td>{{ $p->id }}</td>
+            <td>{{ $p->name }}</td>
+            <td>{{ $p->description }}</td>
+            <td>{{ $p->stock }}</td>
+            <td>Rp {{ number_format($p->price) }}</td>
+            <td>
+                <img src="{{ asset('images/' . $p->image) }}" width="50">
+            </td>
+            <td>
+                <a href="{{ route('products.edit', $p->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
-                <!-- Harga -->
-                <p class="fw-bold text-danger mt-auto fs-5">
-                    Rp {{ number_format($product->price ?? 0) }}
-                </p>
-
-                <!-- Tombol -->
-                <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                <form action="{{ route('products.destroy', $p->id) }}" method="POST" class="d-inline">
                     @csrf
-                    <button class="btn btn-success w-100 mt-2">
-                        Tambah ke Keranjang
-                    </button>
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm">Hapus</button>
                 </form>
-            </div>
-            <div class="d-flex justify-content-center mt-4">
-                {{ $products->links() }}
-            </div>
-        </div>
-    </div>
-@endforeach
-</div>
+            </td>
+        </tr>
+    @endforeach
+
+    </tbody>
+</table>
+
+{{ $products->links() }}
+
 @endsection
