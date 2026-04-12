@@ -4,7 +4,7 @@
 
 <h3>Tambah Produk</h3>
 
-<form action="{{ route('products.store') }}" method="POST">
+<form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     <input type="text" name="nama" class="form-control mb-2" placeholder="Nama produk">
@@ -21,9 +21,10 @@
         @endforeach
     </select>
 
-    <input type="text" name="gambar" class="form-control mb-2" placeholder="Nama gambar">
-
+    <!-- UPLOAD GAMBAR -->
+    <input type="file" name="gambar" class="form-control mb-2">
+        
     <button class="btn btn-success">Simpan</button>
 </form>
 
-@endsection 
+@endsection

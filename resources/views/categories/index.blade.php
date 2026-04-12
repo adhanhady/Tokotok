@@ -49,12 +49,11 @@
                                 ✏️
                             </a>
 
-                            <form action="{{ route('categories.destroy', $cat->id) }}" 
-                                  method="POST" class="d-inline">
+                            <form action="{{ route('categories.destroy', $cat->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
 
-                                <button class="btn btn-sm btn-danger">
+                                <button onclick="return confirm('Yakin hapus?')" class="btn btn-danger btn-sm">
                                     🗑️
                                 </button>
                             </form>

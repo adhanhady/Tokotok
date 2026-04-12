@@ -25,23 +25,26 @@ class ProductController extends Controller
     // Simpan produk
     public function store(Request $request)
     {
-        // VALIDASI
         $request->validate([
             'nama' => 'required|max:255',
             'deskripsi' => 'required',
             'stok' => 'required|integer',
             'harga' => 'required|numeric',
-            'category_id' => 'required'
+            'category_id' => 'required',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // SIMPAN (mapping)
+        // upload gambar
+        $fileName = time() . '.' . $request->gambar->extension();
+        $request->gambar->move(public_path('images'), $fileName);
+
         Product::create([
             'name' => $request->nama,
             'description' => $request->deskripsi,
             'stock' => $request->stok,
             'price' => $request->harga,
             'category_id' => $request->category_id,
-            'image' => $request->gambar ?? 'default.jpg'
+            'image' => $fileName
         ]);
 
         return redirect('/products')->with('success', 'Produk berhasil ditambahkan');
@@ -63,21 +66,47 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $categories = ProductCategory::all();
+
         return view('products.edit', compact('product', 'categories'));
     }
 
     // Update produk
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
-        return redirect('/products')->with('success', 'Produk diupdate');
+            $request->validate([
+                'nama' => 'required|max:255',
+                'deskripsi' => 'required',
+                'stok' => 'required|integer',
+                'harga' => 'required|numeric',
+                'category_id' => 'required'
+            ]);
+
+            $product = Product::findOrFail($id);
+
+            $product->update([
+                'name' => $request->nama,
+                'description' => $request->deskripsi,
+                'stock' => $request->stok,
+                'price' => $request->harga,
+                'category_id' => $request->category_id,
+                'image' => $product->image // tetap
+            ]);
+
+            return redirect('/products')->with('success', 'Produk berhasil diupdate');
     }
 
     // Hapus produk
     public function destroy($id)
     {
-        Product::destroy($id);
-        return redirect('/products')->with('success', 'Produk dihapus');
+        $product = Product::findOrFail($id);
+
+        // hapus gambar
+        if ($product->image && file_exists(public_path('images/' . $product->image))) {
+            unlink(public_path('images/' . $product->image));
+        }
+
+        $product->delete();
+
+        return redirect('/products')->with('success', 'Produk berhasil dihapus');
     }
 }

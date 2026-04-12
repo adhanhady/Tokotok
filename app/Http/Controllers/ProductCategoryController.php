@@ -49,15 +49,11 @@ class ProductCategoryController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => [
-            'required',
-            Rule::unique('categories', 'nama')->ignore($id)
-        ]
-        ], [
-            'nama.unique' => 'Kategori sudah ada!'
+            'nama' => 'required|max:255'
         ]);
 
         $cat = ProductCategory::findOrFail($id);
+
         $cat->update([
             'nama' => $request->nama
         ]);
@@ -69,6 +65,6 @@ class ProductCategoryController extends Controller
     public function destroy($id)
     {
         ProductCategory::destroy($id);
-        return redirect('/categories')->with('success', 'Kategori dihapus');
+        return redirect('/categories')->with('success', 'Kategori berhasil dihapus');
     }
 }

@@ -37,7 +37,7 @@
                 <form action="{{ route('products.destroy', $p->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-danger btn-sm">Hapus</button>
+                    <button onclick="return confirm('Yakin hapus?')" class="btn btn-danger btn-sm">Hapus</button>
                 </form>
             </td>
         </tr>
