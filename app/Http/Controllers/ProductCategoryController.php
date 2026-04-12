@@ -23,7 +23,9 @@ class ProductCategoryController extends Controller
     // 🔥 SIMPAN
     public function store(Request $request)
     {
-        ProductCategory::create($request->all());
+            ProductCategory::create([
+                'nama' => $request->nama
+            ]);
         return redirect('/categories')->with('success', 'Kategori ditambahkan');
     }
 
