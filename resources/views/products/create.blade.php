@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Tambah Produk</h2>
+
+<h3>Tambah Produk</h3>
 
 <form action="{{ route('products.store') }}" method="POST">
     @csrf
@@ -24,4 +25,5 @@
 
     <button class="btn btn-success">Simpan</button>
 </form>
-@endsection
+
+@endsection 

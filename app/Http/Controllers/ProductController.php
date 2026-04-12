@@ -27,14 +27,14 @@ class ProductController extends Controller
     {
         // VALIDASI
         $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'required',
-            'stock' => 'required|integer',
-            'price' => 'required|numeric',
+            'nama' => 'required|max:255',
+            'deskripsi' => 'required',
+            'stok' => 'required|integer',
+            'harga' => 'required|numeric',
             'category_id' => 'required'
         ]);
 
-        // SIMPAN
+        // SIMPAN (mapping)
         Product::create([
             'name' => $request->nama,
             'description' => $request->deskripsi,
@@ -57,7 +57,7 @@ class ProductController extends Controller
 
             return view('products.show', compact('product'));
     }
-    
+
     // Form edit
     public function edit($id)
     {

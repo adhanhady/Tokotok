@@ -39,6 +39,30 @@
 
     <!-- Content -->
     <div class="container mt-4">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show m-3">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger m-3">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <script>
+            setTimeout(() => {
+                let alert = document.querySelector('.alert');
+                if(alert) alert.remove();
+            }, 3000);
+        </script>
+        
         @yield('content')
     </div>
 

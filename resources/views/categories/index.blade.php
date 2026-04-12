@@ -31,7 +31,7 @@
                     @foreach($categories as $cat)
                     <tr>
 
-                        <td>{{ $cat->id }}</td>
+                        <td>{{ $loop->iteration }}</td>
 
                         <td class="fw-semibold">
                             {{ $cat->nama }}

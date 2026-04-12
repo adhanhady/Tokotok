@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ProductCategory;
+use Illuminate\Validation\Rule;
 
 class ProductCategoryController extends Controller
 {
@@ -23,12 +24,13 @@ class ProductCategoryController extends Controller
     // 🔥 SIMPAN
     public function store(Request $request)
     {
-        // VALIDASI
         $request->validate([
-            'nama' => 'required|max:255'
+            'nama' => 'required|max:255|unique:categories,nama'
+        ], [
+            'nama.required' => 'Nama kategori wajib diisi!',
+            'nama.unique' => 'Kategori sudah ada!'
         ]);
 
-        // SIMPAN
         ProductCategory::create([
             'nama' => $request->nama
         ]);
@@ -46,9 +48,21 @@ class ProductCategoryController extends Controller
     // 🔥 UPDATE
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama' => [
+            'required',
+            Rule::unique('categories', 'nama')->ignore($id)
+        ]
+        ], [
+            'nama.unique' => 'Kategori sudah ada!'
+        ]);
+
         $cat = ProductCategory::findOrFail($id);
-        $cat->update($request->all());
-        return redirect('/categories')->with('success', 'Kategori diupdate');
+        $cat->update([
+            'nama' => $request->nama
+        ]);
+
+        return redirect('/categories')->with('success', 'Kategori berhasil diupdate');
     }
 
     // 🔥 DELETE

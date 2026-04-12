@@ -23,7 +23,7 @@
 
     @foreach($products as $p)
         <tr>
-            <td>{{ $p->id }}</td>
+            <td>{{ $products->firstItem() + $loop->index }}</td>
             <td>{{ $p->name }}</td>
             <td>{{ $p->description }}</td>
             <td>{{ $p->stock }}</td>

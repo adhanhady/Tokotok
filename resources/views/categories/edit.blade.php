@@ -7,7 +7,7 @@
     @csrf
     @method('PUT')
 
-    <input type="text" name="name" value="{{ $cat->name }}" class="form-control mb-2">
+    <input type="text" name="nama" value="{{ $cat->nama }}" class="form-control mb-2">
 
     <button class="btn btn-primary">Update</button>
 </form>
