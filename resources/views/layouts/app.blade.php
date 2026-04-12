@@ -21,6 +21,7 @@
         <a href="/categories" class="text-white me-3">Kategori</a>
         <a href="/products" class="text-white me-3">Produk</a>
         <a href="/cart" class="text-white me-3">Cart</a>
+        <a href="/dashboard" class="text-white me-3">Dashboard</a>
 
         <span class="text-white me-3">
             {{ Auth::user()->name ?? 'Guest' }}

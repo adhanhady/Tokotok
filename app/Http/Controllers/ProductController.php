@@ -32,8 +32,12 @@ class ProductController extends Controller
     // Detail produk
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        return view('products.show', compact('product'));
+          $product = Product::findOrFail($id);
+
+            // tambah klik
+            $product->increment('views');
+
+            return view('products.show', compact('product'));
     }
 
     // Form edit
