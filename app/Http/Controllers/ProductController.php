@@ -25,8 +25,26 @@ class ProductController extends Controller
     // Simpan produk
     public function store(Request $request)
     {
-        Product::create($request->all());
-        return redirect('/products')->with('success', 'Produk ditambahkan');
+        // VALIDASI
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'stock' => 'required|integer',
+            'price' => 'required|numeric',
+            'category_id' => 'required'
+        ]);
+
+        // SIMPAN
+        Product::create([
+            'name' => $request->nama,
+            'description' => $request->deskripsi,
+            'stock' => $request->stok,
+            'price' => $request->harga,
+            'category_id' => $request->category_id,
+            'image' => $request->gambar ?? 'default.jpg'
+        ]);
+
+        return redirect('/products')->with('success', 'Produk berhasil ditambahkan');
     }
 
     // Detail produk
@@ -39,7 +57,7 @@ class ProductController extends Controller
 
             return view('products.show', compact('product'));
     }
-
+    
     // Form edit
     public function edit($id)
     {
