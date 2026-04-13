@@ -113,7 +113,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        $product->increment('views');
+        $product->increment('views');   
+        $product = Product::with('images')->findOrFail($id);
 
         return view('user.products.show', compact('product'));
     }

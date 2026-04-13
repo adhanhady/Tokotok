@@ -12,24 +12,29 @@
             <div class="card border-0 shadow-sm p-3 text-center">
 
                 <!-- MAIN IMAGE -->
-                <img id="main-image"
-                     src="{{ asset('images/' . $product->image) }}" 
-                     class="img-fluid rounded product-detail-img mb-3">
+                    <img id="main-image"
+                    src="{{ asset('images/' . ($product->images->first()->image ?? $product->image)) }}"
+                    class="img-fluid rounded product-detail-img mb-3">
 
-                <!-- THUMBNAIL -->
+                    <!-- THUMBNAIL -->
                 <div class="d-flex justify-content-center gap-2">
 
-                    <img src="{{ asset('images/' . $product->image) }}"
-                         class="thumb-img active"
-                         onclick="changeImage(this)">
+                    @if($product->images->count() > 0)
 
-                    <img src="{{ asset('images/' . $product->image) }}"
-                         class="thumb-img"
-                         onclick="changeImage(this)">
+                        @foreach($product->images as $index => $img)
+                            <img src="{{ asset('images/' . $img->image) }}"
+                                class="thumb-img {{ $index == 0 ? 'active' : '' }}"
+                                onclick="changeImage(this)">
+                        @endforeach
 
-                    <img src="{{ asset('images/' . $product->image) }}"
-                         class="thumb-img"
-                         onclick="changeImage(this)">
+                    @else
+
+                        <!-- 🔥 fallback kalau tidak ada multiple image -->
+                        <img src="{{ asset('images/' . $product->image) }}"
+                            class="thumb-img active"
+                            onclick="changeImage(this)">
+
+                    @endif
 
                 </div>
 

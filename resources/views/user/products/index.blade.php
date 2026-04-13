@@ -8,60 +8,66 @@
 
 @foreach($products as $p)
 <div class="col-md-3">
-    <div class="card product-card border-0 shadow-sm h-100 product-link"
-     onclick="window.location='{{ route('products.show', $p->id) }}'">
 
-        <!-- IMAGE -->
-        <div class="position-relative overflow-hidden">
-            <img src="{{ asset('images/' . $p->image) }}" 
-                 class="card-img-top product-img">
+    <a href="{{ route('products.show', $p->id) }}" 
+       class="text-decoration-none text-dark">
 
-            <!-- BADGE -->
-            @if($p->stock > 0)
-                <span class="badge bg-success position-absolute top-0 start-0 m-2">
-                    Ready
-                </span>
-            @else
-                <span class="badge bg-danger position-absolute top-0 start-0 m-2">
-                    Habis
-                </span>
-            @endif
-        </div>
+        <div class="card product-card border-0 shadow-sm h-100">
 
-        <!-- BODY -->
-        <div class="card-body d-flex flex-column">
+            <!-- IMAGE -->
+            <div class="position-relative overflow-hidden">
+                <img src="{{ asset('images/' . $p->image) }}" 
+                     class="card-img-top product-img">
 
-            <h6 class="fw-semibold mb-1">{{ $p->name }}</h6>
+                @if($p->stock > 0)
+                    <span class="badge bg-success position-absolute top-0 start-0 m-2">
+                        Ready
+                    </span>
+                @else
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                        Habis
+                    </span>
+                @endif
+            </div>
 
-            <small class="text-muted mb-2">
-                {{ $p->category->nama ?? 'Umum' }}
-            </small>
+            <!-- BODY -->
+            <div class="card-body d-flex flex-column">
 
-            <h5 class="text-danger fw-bold mb-3">
-                Rp {{ number_format($p->price) }}
-            </h5>
+                <h6 class="fw-semibold mb-1">{{ $p->name }}</h6>
 
-            <!-- BUTTON -->
-            <div class="mt-auto">
+                <small class="text-muted mb-2">
+                    {{ $p->category->nama ?? 'Umum' }}
+                </small>
 
-            <form action="{{ route('cart.add', $p->id) }}" method="POST"
-                onclick="event.stopPropagation();">
-                @csrf
-                <button class="btn btn-warning w-100 mb-2">
-                    Checkout
-                </button>
-            </form>
+                <h5 class="text-danger fw-bold mb-3">
+                    Rp {{ number_format($p->price) }}
+                </h5>
 
-            <button class="btn btn-dark w-100 btn-add-cart" 
-                    data-id="{{ $p->id }}"
-                    onclick="event.stopPropagation();">
-                + Keranjang
-            </button>
+                <!-- BUTTON -->
+                <div class="mt-auto">
+
+                    <form action="{{ route('cart.add', $p->id) }}" method="POST"
+                          onclick="event.stopPropagation();">
+                        @csrf
+                        <button class="btn btn-warning w-100 mb-2">
+                            Checkout
+                        </button>
+                    </form>
+
+                    <button class="btn btn-dark w-100 btn-add-cart" 
+                            data-id="{{ $p->id }}"
+                            onclick="event.stopPropagation();">
+                        + Keranjang
+                    </button>
+
+                </div>
 
             </div>
 
         </div>
-    </div>
+
+    </a>
+
 </div>
 @endforeach
 

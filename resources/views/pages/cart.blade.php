@@ -59,32 +59,49 @@
     <!-- SUMMARY -->
     <div class="col-md-4">
 
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
 
-                <h5 class="mb-3">Ringkasan</h5>
+            <h5 class="mb-3">Ringkasan</h5>
 
-                @php $total = 0; @endphp
+            @php $total = 0; @endphp
 
-                @foreach($cart as $item)
-                    @php $total += $item['price'] * $item['qty']; @endphp
-                @endforeach
+            @foreach($cart as $item)
+                @php $total += $item['price'] * $item['qty']; @endphp
+            @endforeach
 
-                <div class="d-flex justify-content-between">
-                    <span>Total</span>
-                    <strong id="total-price">Rp {{ number_format($total) }}</strong>
-                </div>
-
-                <hr>
-
-                <button class="btn btn-dark w-100">
-                    Checkout
-                </button>
-
+            <div class="d-flex justify-content-between">
+                <span>Total</span>
+                <strong id="total-price">Rp {{ number_format($total) }}</strong>
             </div>
-        </div>
 
+            <hr>
+
+            @php
+                $message = "Halo admin MyShop\n\n";
+
+                foreach($cart as $item) {
+                    $harga = number_format($item['price'] * $item['qty'], 0, ',', '.');
+
+                    $message .= "- {$item['name']} ({$item['qty']}x) = Rp {$harga}\n";
+                }
+
+                $totalFormatted = number_format($total, 0, ',', '.');
+
+                $message .= "\nTotal: Rp {$totalFormatted}";
+            @endphp
+
+            <!-- 🔥 WA CHECKOUT -->
+            <a href="https://wa.me/6285647595353?text={{ urlencode($message) }}" 
+            target="_blank"
+            class="btn btn-success w-100">
+                Checkout
+            </a>
+
+        </div>
     </div>
+
+</div>
 
 </div>
 
