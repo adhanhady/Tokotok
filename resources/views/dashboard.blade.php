@@ -2,48 +2,38 @@
 
 @section('content')
 
-<div class="container mt-4">
+<h2 class="mb-4">Dashboard</h2>
 
-    <h3 class="mb-4 fw-bold">Dashboard</h3>
+<div class="row">
 
-    <div class="row">
-
-        <!-- PRODUK -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 text-center">
-                <div class="card-body">
-                    <h5 class="text-muted">Jumlah Produk</h5>
-                    <h2 class="fw-bold text-primary">
-                        {{ $totalProduk }}
-                    </h2>
-                </div>
+    <!-- Produk -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Total Produk</h5>
+                <h2 class="fw-bold text-primary">{{ $totalProduk }}</h2>
             </div>
         </div>
+    </div>
 
-        <!-- KATEGORI -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 text-center">
-                <div class="card-body">
-                    <h5 class="text-muted">Jumlah Kategori</h5>
-                    <h2 class="fw-bold text-success">
-                        {{ $totalKategori }}
-                    </h2>
-                </div>
+    <!-- Kategori -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Total Kategori</h5>
+                <h2 class="fw-bold text-success">{{ $totalKategori }}</h2>
             </div>
         </div>
+    </div>
 
-        <!-- KLIK -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 text-center">
-                <div class="card-body">
-                    <h5 class="text-muted">Jumlah Klik Produk</h5>
-                    <h2 class="fw-bold text-danger">
-                        {{ $totalKlik }}
-                    </h2>
-                </div>
+    <!-- Klik -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Total Klik Produk</h5>
+                <h2 class="fw-bold text-danger">{{ $totalKlik }}</h2>
             </div>
         </div>
-
     </div>
 
 </div>

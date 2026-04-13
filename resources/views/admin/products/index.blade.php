@@ -3,10 +3,31 @@
 @section('content')
 <h2 class="mb-4">List Produk</h2>
 
-<a href="{{ route('products.create') }}" class="btn btn-primary mb-3">
-    + Tambah
-</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
 
+    <!-- LEFT: FILTER -->
+    <form method="GET" action="/products" class="d-flex gap-2">
+        <!-- KATEGORI -->
+        <select name="category" class="form-control">
+            <option value="">Semua Kategori</option>
+            @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" 
+                    {{ request('category') == $cat->id ? 'selected' : '' }}>
+                    {{ $cat->nama }}
+                </option>
+            @endforeach
+        </select>
+
+        <button class="btn btn-dark">Filter</button>
+
+    </form>
+
+    <!-- RIGHT: TAMBAH -->
+    <a href="/products/create" class="btn btn-primary">
+        + Tambah
+    </a>
+
+</div>
 <table class="table table-bordered">
     <thead class="table-dark">
         <tr>
@@ -42,7 +63,9 @@
             </td>
         </tr>
     @endforeach
-
+<div class="mt-4">
+    {{ $products->links() }}
+</div>
     </tbody>
 </table>
 

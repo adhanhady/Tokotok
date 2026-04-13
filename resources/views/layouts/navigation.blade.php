@@ -2,7 +2,7 @@
 
     <!-- LOGO -->
     <a href="/products" class="navbar-brand fw-bold">
-        MyShop 🛒
+        MyShop 
     </a>
 
     <!-- MENU -->

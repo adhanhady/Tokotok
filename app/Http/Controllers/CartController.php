@@ -16,7 +16,7 @@ class CartController extends Controller
     }
 
     // tambah ke cart
-    public function add($id)
+    public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
@@ -26,16 +26,24 @@ class CartController extends Controller
             $cart[$id]['qty']++;
         } else {
             $cart[$id] = [
-                "name" => $product->name,     // ✅ FIX
-                "price" => $product->price,   // ✅ FIX
-                "image" => $product->image,   // ✅ FIX
-                "qty" => 1
+                'name' => $product->name,
+                'price' => $product->price,
+                'image' => $product->image,
+                'qty' => 1
             ];
         }
 
         session()->put('cart', $cart);
 
-        return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang!');
+        // 🔥 CEK: kalau dari AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'cartCount' => count($cart)
+            ]);
+        }
+
+        // 🔥 kalau dari tombol checkout (form)
+        return redirect('/cart');
     }
 
     // update qty manual (optional)
@@ -54,44 +62,59 @@ class CartController extends Controller
     // tambah qty
     public function increase($id)
     {
-        $cart = session()->get('cart', []);
+        $cart = session()->get('cart');
 
-        if(isset($cart[$id])) {
-            $cart[$id]['qty']++;
-            session()->put('cart', $cart);
-        }
+        $cart[$id]['qty']++;
 
-        return redirect()->back();
+        session()->put('cart', $cart);
+
+        return response()->json([
+            'qty' => $cart[$id]['qty'],
+            'total' => $this->getTotal($cart),
+            'cartCount' => count($cart)
+        ]);
     }
 
     // kurang qty
     public function decrease($id)
     {
-        $cart = session()->get('cart', []);
+            $cart = session()->get('cart');
 
-        if(isset($cart[$id])) {
-            if($cart[$id]['qty'] > 1) {
+            if ($cart[$id]['qty'] > 1) {
                 $cart[$id]['qty']--;
-            } else {
-                unset($cart[$id]); // auto hapus kalau 1
             }
 
             session()->put('cart', $cart);
+
+            return response()->json([
+                'qty' => $cart[$id]['qty'],
+                'total' => $this->getTotal($cart),
+                'cartCount' => count($cart)
+            ]);
+    }
+    private function getTotal($cart)
+    {
+        $total = 0;
+
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['qty'];
         }
 
-        return redirect()->back();
+        return number_format($total);
     }
 
     // hapus item
     public function remove($id)
     {
-        $cart = session()->get('cart', []);
+        $cart = session()->get('cart');
 
-        if(isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
-        }
+        unset($cart[$id]);
 
-        return redirect()->back();
+        session()->put('cart', $cart);
+
+        return response()->json([
+            'total' => $this->getTotal($cart),
+            'cartCount' => count($cart)
+        ]);
     }
 }

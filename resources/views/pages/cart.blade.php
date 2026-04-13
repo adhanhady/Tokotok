@@ -1,111 +1,172 @@
 @extends('layouts.app')
 
 @section('content')
-<h2 class="mb-4">Keranjang Belanja 🛒</h2>
 
-@if(session('cart') && count(session('cart')) > 0)
+<h2 class="mb-4 fw-bold">Keranjang</h2>
 
-<div class="card shadow-sm">
-    <div class="card-body">
+<div class="row">
 
-        <table class="table table-bordered align-middle">
-            <thead class="table-dark text-center">
-                <tr>
-                    <th>Produk</th>
-                    <th>Harga</th>
-                    <th width="150">Qty</th>
-                    <th>Total</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
+    <!-- LIST PRODUK -->
+    <div class="col-md-8">
+        <div id="cart-container">
+
+            @forelse($cart as $id => $item)
+            <div class="card mb-3 shadow-sm border-0">
+                <div class="card-body d-flex align-items-center">
+
+                    <!-- IMAGE -->
+                    <img src="{{ asset('images/' . $item['image']) }}" 
+                         width="80" 
+                         class="rounded me-3">
+
+                    <!-- INFO -->
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">{{ $item['name'] }}</h6>
+                        <small class="text-muted">
+                            Rp {{ number_format($item['price']) }}
+                        </small>
+                    </div>
+
+                    <!-- QTY -->
+                    <div class="d-flex align-items-center">
+
+                        <button class="btn btn-light btn-sm btn-decrease" data-id="{{ $id }}">-</button>
+
+                        <span class="mx-2 qty" id="qty-{{ $id }}">
+                            {{ $item['qty'] }}
+                        </span>
+
+                        <button class="btn btn-light btn-sm btn-increase" data-id="{{ $id }}">+</button>
+
+                    </div>
+
+                    <!-- REMOVE -->
+                    <button class="btn btn-danger btn-sm btn-remove ms-3" data-id="{{ $id }}">
+                        🗑
+                    </button>
+
+                </div>
+            </div>
+            @empty
+                <div class="alert alert-info text-center">
+                    Keranjang masih kosong 😢
+                </div>
+            @endforelse
+
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+
+                <h5 class="mb-3">Ringkasan</h5>
 
                 @php $total = 0; @endphp
 
-                @foreach(session('cart') as $id => $item)
-
-                @php 
-                    $price = $item['price'] ?? 0; // 🔥 anti error
-                    $qty = $item['qty'] ?? 1;
-                    $subtotal = $price * $qty;
-                    $total += $subtotal;
-                @endphp
-
-                <tr>
-                    <!-- PRODUK + GAMBAR -->
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <img src="{{ asset('images/' . ($item['image'] ?? 'default.jpg')) }}" 
-                                width="50" height="50"
-                                style="object-fit: cover;"
-                                class="me-2 rounded">
-
-                            <strong>{{ $item['name'] ?? '-' }}</strong>
-                        </div>
-                    </td>
-
-                    <!-- HARGA -->
-                    <td class="text-center">Rp {{ number_format($price) }}</td>
-
-                    <!-- QTY -->
-                    <td class="text-center">
-                        <div class="d-flex align-items-center justify-content-center gap-2">
-
-                            <!-- MINUS -->
-                            <form action="{{ route('cart.decrease', $id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="width: 35px;">-</button>
-                            </form>
-
-                            <span class="mx-2">{{ $qty }}</span>
-
-                            <!-- PLUS -->
-                            <form action="{{ route('cart.increase', $id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="width: 35px;">+</button>
-                            </form>
-
-                        </div>
-                    </td>
-
-                    <!-- TOTAL -->
-                   <td class="text-center">Rp {{ number_format($subtotal) }}</td>
-
-                    <!-- AKSI -->
-                    <td>
-                        <form action="{{ route('cart.remove', $id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-
+                @foreach($cart as $item)
+                    @php $total += $item['price'] * $item['qty']; @endphp
                 @endforeach
 
-            </tbody>
-        </table>
+                <div class="d-flex justify-content-between">
+                    <span>Total</span>
+                    <strong id="total-price">Rp {{ number_format($total) }}</strong>
+                </div>
 
-        <!-- TOTAL -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <h4>Total: Rp {{ number_format($total) }}</h4>
+                <hr>
 
-            <a href="#" class="btn btn-success btn-lg">
-                Checkout
-            </a>
+                <button class="btn btn-dark w-100">
+                    Checkout
+                </button>
+
+            </div>
         </div>
 
     </div>
+
 </div>
 
-@else
-<div class="text-center">
-    <h5>Keranjang masih kosong 😢</h5>
-    <a href="/products" class="btn btn-primary mt-3">
-        Belanja Sekarang
-    </a>
-</div>
-@endif
+@endsection
 
-@endsection 
+
+<!-- 🔥 SCRIPT REALTIME -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function updateCartUI(data, id = null) {
+        if (id) {
+            let qtyEl = document.getElementById('qty-' + id);
+            if (qtyEl) qtyEl.innerText = data.qty;
+        }
+
+        document.getElementById('total-price').innerText = 'Rp ' + data.total;
+
+        let badge = document.getElementById('cart-count');
+        if (badge) badge.innerText = data.cartCount;
+
+        let cards = document.querySelectorAll('#cart-container .card');
+
+        if (cards.length === 0) {
+            document.getElementById('cart-container').innerHTML = `
+                <div class="alert alert-info text-center">
+                    Keranjang masih kosong 😢
+                </div>
+            `;
+        }
+    }
+
+    // ➕ INCREASE
+    document.querySelectorAll('.btn-increase').forEach(btn => {
+        btn.addEventListener('click', function() {
+            let id = this.dataset.id;
+
+            fetch(`/cart/increase/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => updateCartUI(data, id));
+        });
+    });
+
+    // ➖ DECREASE
+    document.querySelectorAll('.btn-decrease').forEach(btn => {
+        btn.addEventListener('click', function() {
+            let id = this.dataset.id;
+
+            fetch(`/cart/decrease/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => updateCartUI(data, id));
+        });
+    });
+
+    // 🗑 REMOVE
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', function() {
+            let id = this.dataset.id;
+
+            fetch(`/cart/remove/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.closest('.card').remove();
+                updateCartUI(data);
+            });
+        });
+    });
+
+});
+</script>
